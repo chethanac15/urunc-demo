@@ -1,78 +1,122 @@
-# 🛡️ urunc CI Intelligence Suite (Maintainer-First)
+# urunc CI Intelligence Suite
 
-This project is a high-fidelity, "Mentor-Ready" prototype designed for the `urunc` LFX Mentorship (2026 Term 1). While other dashboards focus purely on visualization, this suite is engineered around **Maintainer Empathy**—delivering signal, reducing noise, and tracking stability over time.
+A practical CI monitoring tool built for the urunc project's LFX Mentorship (2026 Term 1). This isn't just another dashboard—it's designed to help maintainers actually understand what's breaking and why, without drowning in noise.
 
-## 🌟 Elite Features (V8)
-- **Production Slack Integration**: Real-time alerts delivered to `#ci-alerts` in the `urunc-dem0` workspace.
-- **State-Change Intelligence**: Only notifies on *transitions* to failure, definitively solving the alert fatigue problem.
-- **Triage-Aware Categorization**: Automatically groups signals into `REQUIRED` (Blockers), `NIGHTLY`, and `EXPERIMENTAL`.
-- **Chronic Failure Tracking**: Detects how long a job has been broken (e.g., "Failing for 3 days").
-- **Latest Merged PR context**: Explicitly links the most recent integration to the current CI result.
+## Why This Exists
 
-## 🧠 Philosophy: Built for Signal, Not Noise
-Mentors in the CNCF space are often overwhelmed by "Alert Fatigue." This suite is designed to be **empathetic**:
-- **It knows history**: It tracks how many *consecutive* runs a job has failed.
-- **It knows prioritization**: `REQUIRED` jobs (unit tests, linting) are treated as blockers; `EXPERIMENTAL` jobs are treated as signals.
-- **It knows simplicity**: There is no "backend" to manage. It's a series of scripts and a static export.
+Most CI dashboards just show you red and green. This one tries to be smarter about it. If a test has been failing for 3 days straight, that's different from a flaky test that failed once. If a required job breaks, that's more urgent than an experimental feature. The goal is to surface what actually matters.
 
-## 🏗️ Architecture
-The suite is designed with clear separation of concerns (Data Collection -> Signal Normalization -> Notification Plugins -> UI Presentation).
+## What It Does
 
-```text
-[ GitHub API ] -> [ collector.py ] -> [ SQLite / JSON ]
-                                          |
-        +---------------------------------+---------------------------------+
-        |                                 |                                 |
- [ normalizer.py ]                 [ notifier.py ]                  [ dashboard.py ]
-(Signals & Tiers)                 (Slack/GH Plugins)               (Elite Streamlit UI)
-        |                                 |                                 |
- [ export_report.py ]             [ Real-time Alerts ]              [ Static dist/ ]
+**Smart Alerts**  
+Only notifies when something *changes* to a failure state. No spam from the same broken build.
+
+**Failure Duration Tracking**  
+Knows how long a job has been broken. "Failing for 3 days" hits different than "failed once."
+
+**Job Categorization**  
+Automatically groups jobs into REQUIRED (blockers), NIGHTLY, and EXPERIMENTAL based on their names and patterns.
+
+**Latest PR Context**  
+Shows which PR was merged most recently, so you can quickly connect the dots when something breaks.
+
+**Slack Integration**  
+Can send alerts to Slack when configured locally. Disabled by default for security.
+
+## Architecture
+
+Pretty straightforward pipeline:
+
+```
+GitHub API → collector.py → SQLite database
+                                    ↓
+                    ┌───────────────┼───────────────┐
+                    ↓               ↓               ↓
+              normalizer.py    notifier.py    dashboard.py
+              (categorize)     (alert)        (visualize)
+                    ↓               ↓               ↓
+              export_report.py  Slack/Console  Streamlit UI
 ```
 
-## 🚀 Final Hands-on (Demo Instructions)
+## Quick Start
 
-### 1. Initialize Elite Data
+### 1. Generate Demo Data
 ```bash
 python mock_collector.py
 ```
-*Note: This generates "The Chosen One" data, including a chronic 3-day failure in the REQUIRED `unit-test (amd64)` job to showcase signal detection.*
+This creates realistic test data including a chronic failure scenario to demonstrate the detection logic.
 
-### 2. Run the Intelligence Console
+### 2. View the Dashboard
 ```bash
 python -m streamlit run dashboard.py
 ```
-- **Maintainer View**: Uses tiers and blocker counts.
-- **Kata-Style View**: A tabular mode requested by urunc maintainers.
+Opens an interactive dashboard at `localhost:8501` with health metrics and job breakdowns.
 
-### 3. Check Notifier Output
+### 3. Test Notifications
 ```bash
 python notifier.py
 ```
-*Watch the console (or Slack if configured) report failure durations and priority levels.*
+Runs the alert logic and shows what would be sent to Slack (or actually sends if configured).
 
-## 🌐 Deployment
+## Live Demo
 
-A static snapshot of the CI Intelligence Dashboard is deployed via GitHub Pages:
+A static snapshot is deployed at: **https://chethanac15.github.io/urunc-demo/**
 
-**Live Demo:** https://chethanac15.github.io/urunc-demo/
+> **Note:** The live demo is just a static HTML export. The actual system (GitHub API calls, database, Slack alerts) runs locally only. This keeps credentials secure and avoids unnecessary API rate limits.
 
-> **Note**  
-> The live system (GitHub API access, SQLite persistence, and Slack notifications) runs **locally only** and is intentionally not deployed to avoid credential exposure and alert noise. The GitHub Pages deployment is a **static snapshot** for evaluation purposes.
+## Slack Setup (Optional)
 
-### Slack Notifications (Optional)
+Slack notifications are off by default. To enable them locally:
 
-Slack alerts are disabled by default.
-
-To enable locally:
 ```bash
-export SLACK_WEBHOOK_URL="https://hooks.slack.com/services/..."
+export SLACK_WEBHOOK_URL="https://hooks.slack.com/services/YOUR/WEBHOOK/HERE"
 ```
 
-If the variable is not set, alerts are skipped by design. This follows a zero-trust, secure-by-default model.
+If this isn't set, the notifier just prints to console. This is intentional—no credentials in the repo, no accidental alerts.
 
-## 📂 Key Mentee Resources
-- **[PROPOSAL_DRAFT.md](./PROPOSAL_DRAFT.md)**: A ready-to-use LFX application blueprint mapping this implementation to CNCF goals.
-- **[MAINTAINER_GUIDE.md](./MAINTAINER_GUIDE.md)**: A walkthrough of the maintainer's decision loop using this tool.
+## Project Structure
+
+```
+├── collector.py        # Fetches workflow data from GitHub API
+├── database.py         # SQLite persistence layer
+├── normalizer.py       # Categorizes jobs and calculates stability
+├── notifier.py         # Alert logic with state-change detection
+├── dashboard.py        # Streamlit UI for interactive viewing
+├── export_report.py    # Generates static HTML snapshot
+├── mock_collector.py   # Creates demo data for testing
+└── config.py           # Configuration (uses env vars for secrets)
+```
+
+## Design Philosophy
+
+The core idea is "signal over noise." Maintainers are busy. They don't need 50 notifications about the same broken build. They need to know:
+
+1. What just broke (state changes)
+2. How long it's been broken (chronic vs flaky)
+3. How urgent it is (required vs experimental)
+
+Everything else is just clutter.
+
+## For LFX Reviewers
+
+This prototype demonstrates:
+- Understanding of CI/CD workflows and GitHub Actions
+- Practical approach to alert fatigue (a real problem in CNCF projects)
+- Security-conscious design (no hardcoded credentials, local-first)
+- Static deployment strategy (zero maintenance on GitHub Pages)
+
+See also:
+- **[PROPOSAL_DRAFT.md](./PROPOSAL_DRAFT.md)** - Full LFX application details
+- **[MAINTAINER_GUIDE.md](./MAINTAINER_GUIDE.md)** - Walkthrough of the maintainer workflow
+
+## Dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+Main libraries: `requests`, `pandas`, `streamlit`, `sqlite3` (built-in)
 
 ---
-*Built with maintainer empathy by [Your Name] for LFX 2026.*
+
+Built for the urunc project's LFX Mentorship 2026. Feedback welcome.
