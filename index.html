@@ -1,0 +1,94 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>urunc CI Ultimate Report</title>
+    <style>
+        body { font-family: -apple-system, sans-serif; background: #0d1117; color: #c9d1d9; padding: 40px; }
+        .pr-banner { border: 1px solid #58a6ff; padding: 10px; border-radius: 8px; margin-bottom: 20px; color: #58a6ff; }
+        .score { font-size: 2.5rem; font-weight: 800; color: #adbac7; }
+        table { width: 100%; border-collapse: collapse; margin-top: 30px; }
+        th { text-align: left; color: #8b949e; padding: 10px; border-bottom: 2px solid #30363d; }
+        td { padding: 10px; border-bottom: 1px solid #21262d; }
+        .pass { color: #3fb950; font-weight: bold; }
+        .fail { color: #f85149; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div style="background:#1f6feb;color:white;padding:12px;text-align:center;margin-bottom:16px;border-radius:6px;">
+        <strong>📸 Static Demo Snapshot (GitHub Pages)</strong><br>
+        Generated locally from the urunc CI Intelligence Suite.<br>
+        Live GitHub API access and Slack notifications run locally only.
+    </div>
+    <h1>📋 urunc CI Ultimate Dashboard</h1>
+    <div class="pr-banner">Latest Merged PR: <b>feat: optimized hypercall path for urunc-vmm</b> by @ananos</div>
+    
+    <div style="display: flex; gap: 40px;">
+        <div><div class="score">9</div><p>Total Jobs</p></div>
+        <div><div class="score" style="color: #3fb950;">5</div><p>Passing</p></div>
+        <div><div class="score" style="color: #58a6ff;">55%</div><p>Health Score</p></div>
+    </div>
+
+    <table>
+        <tr><th>Job Name</th><th>Intent</th><th>Stability</th><th>Latest</th></tr>
+        
+        <tr>
+            <td>unit-test (arm64)</td>
+            <td><span style="font-size: 0.7rem; color: #8b949e;">CI</span></td>
+            <td>80%</td>
+            <td class="pass">SUCCESS</td>
+        </tr>
+        <tr>
+            <td>benchmarks</td>
+            <td><span style="font-size: 0.7rem; color: #8b949e;">EXPERIMENTAL</span></td>
+            <td>90%</td>
+            <td class="pass">SUCCESS</td>
+        </tr>
+        <tr>
+            <td>e2e (fedoras)</td>
+            <td><span style="font-size: 0.7rem; color: #8b949e;">NIGHTLY</span></td>
+            <td>30%</td>
+            <td class="fail">FAILURE</td>
+        </tr>
+        <tr>
+            <td>experimental-isolation</td>
+            <td><span style="font-size: 0.7rem; color: #8b949e;">EXPERIMENTAL</span></td>
+            <td>60%</td>
+            <td class="pass">SUCCESS</td>
+        </tr>
+        <tr>
+            <td>build (amd64)</td>
+            <td><span style="font-size: 0.7rem; color: #8b949e;">CI</span></td>
+            <td>60%</td>
+            <td class="fail">FAILURE</td>
+        </tr>
+        <tr>
+            <td>unit-test (amd64)</td>
+            <td><span style="font-size: 0.7rem; color: #8b949e;">CI</span></td>
+            <td>0%</td>
+            <td class="fail">FAILURE</td>
+        </tr>
+        <tr>
+            <td>lint</td>
+            <td><span style="font-size: 0.7rem; color: #8b949e;">CI</span></td>
+            <td>80%</td>
+            <td class="pass">SUCCESS</td>
+        </tr>
+        <tr>
+            <td>integration-test</td>
+            <td><span style="font-size: 0.7rem; color: #8b949e;">NIGHTLY</span></td>
+            <td>90%</td>
+            <td class="fail">FAILURE</td>
+        </tr>
+        <tr>
+            <td>build (arm64)</td>
+            <td><span style="font-size: 0.7rem; color: #8b949e;">CI</span></td>
+            <td>70%</td>
+            <td class="pass">SUCCESS</td>
+        </tr>
+    </table>
+
+    <p style="margin-top: 40px; color: #8b949e; text-align: center;">Generated on 2026-02-09 16:47 | CNCF urunc LFX Prototype</p>
+</body>
+</html>
