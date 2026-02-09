@@ -87,27 +87,7 @@ If this isn't set, the notifier just prints to console. This is intentional—no
 └── config.py           # Configuration (uses env vars for secrets)
 ```
 
-## Design Philosophy
 
-The core idea is "signal over noise." Maintainers are busy. They don't need 50 notifications about the same broken build. They need to know:
-
-1. What just broke (state changes)
-2. How long it's been broken (chronic vs flaky)
-3. How urgent it is (required vs experimental)
-
-Everything else is just clutter.
-
-## For LFX Reviewers
-
-This prototype demonstrates:
-- Understanding of CI/CD workflows and GitHub Actions
-- Practical approach to alert fatigue (a real problem in CNCF projects)
-- Security-conscious design (no hardcoded credentials, local-first)
-- Static deployment strategy (zero maintenance on GitHub Pages)
-
-See also:
-- **[PROPOSAL_DRAFT.md](./PROPOSAL_DRAFT.md)** - Full LFX application details
-- **[MAINTAINER_GUIDE.md](./MAINTAINER_GUIDE.md)** - Walkthrough of the maintainer workflow
 
 ## Dependencies
 
@@ -119,4 +99,4 @@ Main libraries: `requests`, `pandas`, `streamlit`, `sqlite3` (built-in)
 
 ---
 
-Built for the urunc project's LFX Mentorship 2026. Feedback welcome.
+
