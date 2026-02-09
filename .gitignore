@@ -1,0 +1,40 @@
+# Secrets & Environment
+.env
+*.env
+.env.*
+
+# Databases & Runtime State
+*.db
+*.sqlite
+*.sqlite3
+last_notified.txt
+last_notified_state.json
+latest_pr.json
+
+# Generated Output (Pages only)
+dist/
+static/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+*.egg
+*.egg-info/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
